@@ -46,6 +46,7 @@ export default function OnlineMultiAvatar({
       <Box sx={{ width: "40px", height: "40px", position: "relative" }}>
         {receivers?.slice(0, 3).map((xx, index) => (
           <Avatar
+            key={index}
             className={`${
               index === 0
                 ? "left-0 bottom-0"

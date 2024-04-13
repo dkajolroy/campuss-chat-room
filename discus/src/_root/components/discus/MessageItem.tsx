@@ -55,33 +55,31 @@ export default function MessageItem({
               </Typography>
             </Stack>
           }
-          secondary={
-            <>
-              {item.text}
-              <div className="flex flex-wrap gap-1">
-                {item.media.map((x, i) => (
-                  <img
-                    className="max-w-20 max-h-20 object-cover rounded"
-                    src={x.secure_url}
-                    key={i}
-                    alt="media"
-                  />
-                ))}
-              </div>
-              <Typography
-                fontSize={12}
-                component="span"
-                variant="body2"
-                color="text.secondary"
-                display="block"
-                textAlign={myText ? "left" : "right"}
-              >
-                {/* {moment(item.createdAt).fromNow()} */}
-                {formatTime(item.createdAt)}
-              </Typography>
-            </>
-          }
         />
+        <div>
+          {item.text}
+          <div className="flex flex-wrap gap-1">
+            {item.media.map((x, i) => (
+              <img
+                className="max-w-20 max-h-20 object-cover rounded"
+                src={x.secure_url}
+                key={i}
+                alt="media"
+              />
+            ))}
+          </div>
+          <Typography
+            fontSize={12}
+            component="span"
+            variant="body2"
+            color="text.secondary"
+            display="block"
+            textAlign={myText ? "left" : "right"}
+          >
+            {/* {moment(item.createdAt).fromNow()} */}
+            {formatTime(item.createdAt)}
+          </Typography>
+        </div>
       </Stack>
     </ListItem>
   );
