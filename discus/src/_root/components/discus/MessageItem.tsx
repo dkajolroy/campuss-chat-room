@@ -32,7 +32,10 @@ export default function MessageItem({
       {!myText && (
         <ListItemAvatar sx={{ justifyContent: "center", display: "flex" }}>
           {/* <Avatar alt={item.sender.name} src={item.sender.image.secure_url} /> */}
-          <OnlineAvatar online={Boolean(online)} receiver={item.sender} />
+          <OnlineAvatar
+            online={Boolean(online)}
+            image={item.sender.image.secure_url}
+          />
         </ListItemAvatar>
       )}
       <Stack

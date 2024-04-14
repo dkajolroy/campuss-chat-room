@@ -84,7 +84,7 @@ export default function UserItem({
       alignItems="flex-start"
     >
       <ListItemAvatar>
-        <OnlineAvatar online={Boolean(online)} receiver={item} />
+        <OnlineAvatar online={Boolean(online)} image={item.image.secure_url} />
       </ListItemAvatar>
       <ListItemText
         primary={item.name}
