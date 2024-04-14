@@ -10,15 +10,20 @@ import {
   Toolbar,
   styled,
 } from "@mui/material";
+import { useSocket } from "@src/providers/SocketProvider";
 import { sendMessage } from "@src/slices/messageSlice";
-import { store } from "@src/store/store";
+import { RootStore, store } from "@src/store/store";
 import React, { useRef, useState } from "react";
 import InputEmoji from "react-input-emoji";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import GroupModal from "../modal/GroupModal";
 
 export default function BottomToolbar() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { user } = useSelector((sx: RootStore) => sx.authSlice);
+  const { room_id } = useParams();
+  const room = String(room_id);
   const [media, setMedia] = useState<{ files: File[]; blobs: string[] }>({
     files: [],
     blobs: [],
@@ -43,12 +48,14 @@ export default function BottomToolbar() {
     setMedia({ blobs: newBlob, files: newFiles });
   }
 
+  const { socket } = useSocket();
   // input text
   const [text, setText] = useState("");
-  const { room_id } = useParams();
-  const room = String(room_id);
-  // const { socket } = useSocket();
-
+  function onChangeText(text: string) {
+    const ioValue = { room, status: true, name: user?.name, _id: user?._id };
+    socket.emit("typing", ioValue);
+    setText(text);
+  }
   function handleOnEnter() {
     // use text message on enter
     if (room && (text || media.files.length)) {
@@ -113,7 +120,7 @@ export default function BottomToolbar() {
               theme="light"
               inputClass="emoji-picker-input bottom-picker"
               value={text}
-              onChange={setText}
+              onChange={onChangeText}
               cleanOnEnter
               onEnter={handleOnEnter}
               placeholder="Type a message"

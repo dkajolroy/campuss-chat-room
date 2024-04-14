@@ -1,9 +1,16 @@
-import { Box, CircularProgress, CssBaseline, List } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  CssBaseline,
+  List,
+  ListItem,
+} from "@mui/material";
 import BottomToolbar from "@src/_root/components/discus/BottomToolbar";
 import MessageItem from "@src/_root/components/discus/MessageItem";
+import { useSocket } from "@src/providers/SocketProvider";
 import { getMessage } from "@src/slices/messageSlice";
 import { RootStore, store } from "@src/store/store";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
@@ -29,6 +36,33 @@ export default function DiscusPage() {
     }
   }, [messages, room_id, isLoading]);
 
+  const { socket } = useSocket();
+  const [typing, setTyping] = useState({
+    status: false,
+    name: "",
+    _id: "",
+  });
+
+  useEffect(() => {
+    socket.on("typing_res", (value) => {
+      setTyping(value);
+      console.log(value);
+      setTimeout(() => {
+        setTyping({ name: "", _id: "", status: false });
+      }, 2000);
+    });
+  }, []);
+
+  function typingFunc() {
+    if (user?._id !== typing._id && typing.status) {
+      return (
+        <span className="bg-white px-2 rounded text-sm">
+          {typing.name} is typing...
+        </span>
+      );
+    }
+  }
+
   return (
     <Box
       ref={scrollRef}
@@ -47,6 +81,14 @@ export default function DiscusPage() {
               <CircularProgress />
             </div>
           )}
+          <ListItem
+            sx={{
+              py: 0.5,
+              justifyContent: "start",
+            }}
+          >
+            {typingFunc()}
+          </ListItem>
         </List>
       </Box>
       <BottomToolbar />

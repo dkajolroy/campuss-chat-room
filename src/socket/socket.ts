@@ -10,11 +10,11 @@ export default function socket(io: Server) {
       }
       io.emit("online_users", onlineUsers);
     });
-    // send msg
-    // socket.on("send_msg", async(text) => {
-    //   const msg = await Message.create
+    // Typing status
+    socket.on("typing", (value: TypingValue) => {
+      io.to(value.room).emit("typing_res", value);
+    });
 
-    // });
     // join to room
     socket.on("join_room", (room) => {
       socket.join(room);
@@ -26,4 +26,11 @@ export default function socket(io: Server) {
       io.emit("online_users", onlineUsers);
     });
   });
+}
+
+interface TypingValue {
+  name: string;
+  _id: string;
+  status: boolean;
+  room: string;
 }
