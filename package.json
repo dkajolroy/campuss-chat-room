@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon -r tsconfig-paths/register src/index.ts ",
     "init": "npm i && npm install --prefix discus",
-    "build": "npm run init && tsc && npm run build --prefix discus",
+    "build": "npm run init && tsc && tsc-alias && npm run build --prefix discus",
     "test": "tsc && tsc-alias && nodemon dist/index.js",
     "start": "node dist/index.js"
   },

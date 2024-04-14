@@ -5,7 +5,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import { createServer } from "http";
+import path from "path";
 import { Server } from "socket.io";
+import { configApp } from "./config/config";
 import { auth } from "./middleware/auth.middleware";
 import { messageRoute } from "./routers/message_route";
 import { roomRoute } from "./routers/room_route";
@@ -20,23 +22,29 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
+    origin: configApp.frontend_url,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
-
 // Routing config
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/message", auth, messageRoute);
 app.use("/api/room", auth, roomRoute);
 
+// static site
+const root = path.resolve();
+app.use(express.static(path.join(root, "/discus/dist")));
+app.use("*", (req, res) => {
+  res.sendFile(path.join(root, "/discus/dist/index.html"));
+});
+
 // socket server
 const httpServer = createServer(app);
 export const io = new Server(httpServer, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:5173",
+    origin: configApp.frontend_url,
     credentials: true,
   },
 });
