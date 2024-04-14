@@ -1,3 +1,4 @@
+import config from "@src/constants/config";
 import { RootStore } from "@src/store/store";
 import {
   ReactNode,
@@ -14,7 +15,7 @@ interface ValueType {
   onlineUser: OnlineUser[];
 }
 
-const connection = io("http://localhost:5000");
+const connection = io(config.baseApiUrl);
 const SocketContext = createContext<ValueType>({
   socket: connection,
   onlineUser: [],
