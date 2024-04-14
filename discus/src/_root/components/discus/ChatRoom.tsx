@@ -48,13 +48,21 @@ export default function ChatRoom({ item, user }: Props) {
         sx={{ bgcolor: room_id === item._id ? "ButtonShadow" : "initial" }}
       >
         <ListItemAvatar>
-          {item.isGroup ? (
+          {item.isGroup && !item.image ? (
             <OnlineMultiAvatar
               online={Boolean(online.length)}
               receivers={item.members}
             />
+          ) : item.isGroup && item.image ? (
+            <OnlineAvatar
+              online={Boolean(online.length)}
+              image={item.image.secure_url}
+            />
           ) : (
-            <OnlineAvatar online={Boolean(online.length)} receiver={receiver} />
+            <OnlineAvatar
+              online={Boolean(online.length)}
+              image={receiver?.image.secure_url}
+            />
           )}
         </ListItemAvatar>
         <ListItemText

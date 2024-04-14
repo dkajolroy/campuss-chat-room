@@ -17,6 +17,9 @@ const authSlice = createSlice({
   name: "Auth",
   initialState,
   reducers: {
+    updateUser(state, { payload }: PayloadAction<User>) {
+      state.user = payload;
+    },
     logout(state) {
       state.user = null;
       window.location.href = "/";
@@ -38,7 +41,7 @@ const authSlice = createSlice({
     });
   },
 });
-export const { logout } = authSlice.actions;
+export const { logout, updateUser } = authSlice.actions;
 export default authSlice.reducer;
 
 interface FormInput {

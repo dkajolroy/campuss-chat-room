@@ -1,4 +1,5 @@
 import { Room } from "@src/models/room_model";
+import { uploader } from "@src/services/upload.service";
 import { NextFunction, Request, Response } from "express";
 
 // create new conversations rooms
@@ -56,6 +57,7 @@ export async function getRooms(
   }
 }
 
+// Remove Rooms
 export async function removeRoom(
   req: Request,
   res: Response,
@@ -65,6 +67,57 @@ export async function removeRoom(
     // remove all sms
     // remove all media
     // remove all room
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Updates rooms
+export async function updatesRoom(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { room_id } = req.params;
+    const { name } = req.body;
+    const file = req.file;
+    if (file) {
+      const image = await uploader(file, "/discus/rooms");
+      const room = await Room.findByIdAndUpdate(
+        room_id,
+        {
+          $set: {
+            name: name,
+            image,
+          },
+        },
+        { new: true }
+      )
+        .populate("members", "_id name username image")
+        .populate({
+          path: "last_msg",
+          populate: { path: "sender", select: "_id name" },
+        });
+
+      res.status(200).send({ room, message: "Rooms updated successfully !" });
+    } else {
+      const room = await Room.findByIdAndUpdate(
+        room_id,
+        {
+          $set: {
+            name: name,
+          },
+        },
+        { new: true }
+      )
+        .populate("members", "_id name username image")
+        .populate({
+          path: "last_msg",
+          populate: { path: "sender", select: "_id name" },
+        });
+      res.status(200).send({ room, message: "Rooms updated successfully !" });
+    }
   } catch (error) {
     next(error);
   }

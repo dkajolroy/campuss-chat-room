@@ -2,6 +2,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosJsonInstance, getCatchError } from "@src/utils/service";
 import { AxiosError } from "axios";
 import { NavigateFunction } from "react-router-dom";
+import { updateUser } from "./authSlice";
 import { addNewRoom } from "./roomSlice";
 import { showSnackbar } from "./toggleSlice";
 
@@ -41,6 +42,16 @@ const userSlice = createSlice({
         state.isLoading = false;
       }),
       builder.addCase(startChats.rejected, (state) => {
+        state.isLoading = false;
+      });
+    // Update users
+    builder.addCase(updateProfile.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(updateProfile.fulfilled, (state) => {
+        state.isLoading = false;
+      }),
+      builder.addCase(updateProfile.rejected, (state) => {
         state.isLoading = false;
       });
   },
@@ -87,6 +98,29 @@ export const startChats = createAsyncThunk(
           })
         );
       }
+    } catch (error) {
+      rejectWithValue(getCatchError(error as AxiosError));
+    }
+  }
+);
+
+// updates
+export const updateProfile = createAsyncThunk(
+  "User/update",
+  async (
+    { input, callback }: { input: FormData; callback: () => void },
+    { rejectWithValue, dispatch }
+  ) => {
+    try {
+      const { data } = await axiosJsonInstance.put(`/api/user/update`, input);
+      callback();
+      dispatch(
+        showSnackbar({
+          mode: "success",
+          message: data?.message,
+        })
+      );
+      dispatch(updateUser(data?.user));
     } catch (error) {
       rejectWithValue(getCatchError(error as AxiosError));
     }

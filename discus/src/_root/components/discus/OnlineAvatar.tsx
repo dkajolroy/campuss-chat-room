@@ -1,10 +1,10 @@
 import { Avatar, Badge, styled } from "@mui/material";
 
 export default function OnlineAvatar({
-  receiver,
+  image,
   online,
 }: {
-  receiver?: IUser | User;
+  image?: string;
   online: boolean;
 }) {
   // Active Indicator styles
@@ -43,7 +43,7 @@ export default function OnlineAvatar({
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       variant="dot"
     >
-      <Avatar alt={receiver?.name} src={receiver?.image.secure_url} />
+      <Avatar alt="Image" src={image} />
     </StyledBadge>
   );
 }
