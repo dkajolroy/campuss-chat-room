@@ -58,6 +58,7 @@ export default function SearchModal({ openModal, setOpenModal }: Props) {
         input: form,
         navigate,
         callback() {
+          setForm({ members: [], name: "", isGroup: false });
           handleClose();
         },
       })

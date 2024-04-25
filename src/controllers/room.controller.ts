@@ -22,7 +22,7 @@ export async function newRoom(req: Request, res: Response, next: NextFunction) {
     const room = await Room.create({
       isGroup,
       members: [...members, author],
-      name,
+      name: name || undefined,
     });
     await room.populate("members", "_id name email image username");
 

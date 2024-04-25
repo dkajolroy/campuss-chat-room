@@ -46,7 +46,6 @@ export default function DiscusPage() {
   useEffect(() => {
     socket.on("typing_res", (value) => {
       setTyping(value);
-      console.log(value);
       setTimeout(() => {
         setTyping({ name: "", _id: "", status: false });
       }, 2000);
